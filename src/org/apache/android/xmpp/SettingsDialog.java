@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -38,8 +40,10 @@ public class SettingsDialog extends Dialog implements android.view.View.OnClickL
         String service = getText(R.id.service);
         String username = getText(R.id.userid);
         String password = getText(R.id.password);
+        CharSequence text = "Port empty";
         
         // validate input
+        Toast.makeText(this.xmppClient.getApplicationContext(), "Port wrong", Toast.LENGTH_SHORT).show();
         
         // Create a connection
         ConnectionConfiguration connConfig =

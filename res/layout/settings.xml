@@ -92,16 +92,20 @@
                 android:text="Password:"
                 android:minWidth="70dp"
                 />
-        <EditText android:id="@+id/password"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:singleLine="true"
-                  android:password="true"
-                  android:textSize="16sp"
-                  android:autoText="false"
-                  android:minWidth="250dp"
-                  android:capitalize="none"
-                  android:scrollHorizontally="true"/>
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoText="false"
+            android:capitalize="none"
+            android:inputType="textPassword"
+            android:minWidth="250dp"
+            android:password="true"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textSize="16sp" />
+
     </LinearLayout>
 
     <Button android:id="@+id/ok"
