@@ -1,6 +1,7 @@
 package org.apache.android.xmpp;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -48,7 +49,8 @@ public class XMPPClient extends Activity {
 
         // Dialog for getting the xmpp settings
         mDialog = new SettingsDialog(this);
-
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);        
+        
         // Set a listener to show the settings dialog
         Button setup = (Button) this.findViewById(R.id.setup);
         setup.setOnClickListener(new View.OnClickListener() {
@@ -71,10 +73,15 @@ public class XMPPClient extends Activity {
                 Log.i("XMPPClient", "Sending text [" + text + "] to [" + to + "]");
                 Message msg = new Message(to, Message.Type.chat);
                 msg.setBody(text);
-                connection.sendPacket(msg);
-                messages.add(connection.getUser() + ":");
-                messages.add(text);
-                setListAdapter();
+                if ( connection != null ) {	
+                		connection.sendPacket(msg);
+                		messages.add(connection.getUser() + ":");
+                		messages.add(text);
+                		setListAdapter();
+                }
+                else {
+                	Log.i("XMPPClient", "Connection error no connection");
+                }
             }
         });
     }

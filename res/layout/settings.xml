@@ -24,15 +24,20 @@
                   android:capitalize="none"
                   android:minWidth="150dp"
                   android:scrollHorizontally="true"/>
-        <EditText android:id="@+id/port"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:singleLine="true"
-                  android:textSize="16sp"
-                  android:autoText="false"
-                  android:minWidth="80dp"
-                  android:capitalize="none"
-                  android:scrollHorizontally="true"/>
+
+        <EditText
+            android:id="@+id/port"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoText="false"
+            android:capitalize="none"
+            android:inputType="numberDecimal"
+            android:minWidth="80dp"
+            android:numeric="integer"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textSize="16sp" />
+
     </LinearLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="horizontal"

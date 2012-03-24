@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">XMPPClient</string>
+    <string name="host">gotomycloud.net</string>
+    <string name="port">5222</string>
+    <string name="service">gotomycloud.net</string>
+    <string name="userid">menno</string>
+    <string name="recipient">2menno@gmail.com</string>
 </resources>

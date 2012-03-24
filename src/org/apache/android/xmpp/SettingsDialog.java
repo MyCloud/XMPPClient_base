@@ -1,6 +1,7 @@
 package org.apache.android.xmpp;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,7 @@ public class SettingsDialog extends Dialog implements android.view.View.OnClickL
         setContentView(R.layout.settings);
         getWindow().setFlags(4, 4);
         setTitle("XMPP Settings");
+        //MDJ SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);        
         Button ok = (Button) findViewById(R.id.ok);
         ok.setOnClickListener(this);
     }
@@ -36,7 +38,9 @@ public class SettingsDialog extends Dialog implements android.view.View.OnClickL
         String service = getText(R.id.service);
         String username = getText(R.id.userid);
         String password = getText(R.id.password);
-
+        
+        // validate input
+        
         // Create a connection
         ConnectionConfiguration connConfig =
                 new ConnectionConfiguration(host, Integer.parseInt(port), service);
