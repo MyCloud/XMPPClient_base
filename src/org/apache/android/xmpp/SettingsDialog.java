@@ -50,12 +50,9 @@ public class SettingsDialog extends Dialog implements android.view.View.OnClickL
         //Toast.makeText(this.xmppClient.getApplicationContext(), "Port wrong", Toast.LENGTH_SHORT).show();
         
         // Create a connection
-        ConnectionConfiguration connConfig =
-                new ConnectionConfiguration(host, Integer.parseInt(port), service);
-        XMPPConnection connection = new XMPPConnection(connConfig);
-
-        xmppClient.connectConnection( connection );
-        xmppClient.loginConnection( connection, username, password);
+        xmppClient.createConnection(host, Integer.parseInt(port), service);
+        xmppClient.connectConnection();
+        xmppClient.loginConnection(username, password);
 
         dismiss();
     }
