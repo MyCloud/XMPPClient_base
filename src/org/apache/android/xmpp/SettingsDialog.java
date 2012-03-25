@@ -40,37 +40,23 @@ public class SettingsDialog extends Dialog implements android.view.View.OnClickL
         String service = getText(R.id.service);
         String username = getText(R.id.userid);
         String password = getText(R.id.password);
-        CharSequence text = "Port empty";
-        
+        //CharSequence text = "Port empty";
+        host = "gotomycloud.net";
+        port = "5222";
+        service = "gotomycloud.net";
+        username = "menno";
+        password = "Z0wyZ@ny";
         // validate input
-        Toast.makeText(this.xmppClient.getApplicationContext(), "Port wrong", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this.xmppClient.getApplicationContext(), "Port wrong", Toast.LENGTH_SHORT).show();
         
         // Create a connection
         ConnectionConfiguration connConfig =
                 new ConnectionConfiguration(host, Integer.parseInt(port), service);
         XMPPConnection connection = new XMPPConnection(connConfig);
 
-        try {
-            connection.connect();
-            Log.i("XMPPClient", "[SettingsDialog] Connected to " + connection.getHost());
-        } catch (XMPPException ex) {
-            Log.e("XMPPClient", "[SettingsDialog] Failed to connect to " + connection.getHost());
-            Log.e("XMPPClient", ex.toString());
-            xmppClient.setConnection(null);
-        }
-        try {
-            connection.login(username, password);
-            Log.i("XMPPClient", "Logged in as " + connection.getUser());
+        xmppClient.connectConnection( connection );
+        xmppClient.loginConnection( connection, username, password);
 
-            // Set the status to available
-            Presence presence = new Presence(Presence.Type.available);
-            connection.sendPacket(presence);
-            xmppClient.setConnection(connection);
-        } catch (XMPPException ex) {
-            Log.e("XMPPClient", "[SettingsDialog] Failed to log in as " + username);
-            Log.e("XMPPClient", ex.toString());
-                xmppClient.setConnection(null);
-        }
         dismiss();
     }
 

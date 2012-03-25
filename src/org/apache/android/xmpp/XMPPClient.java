@@ -10,12 +10,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
 
 import java.util.ArrayList;
@@ -29,6 +33,7 @@ public class XMPPClient extends Activity {
     private EditText mSendText;
     private ListView mList;
     private XMPPConnection connection;
+    private XMPPPreferences cPreferences;
 
     /**
      * Called with the activity is first created.
@@ -48,8 +53,11 @@ public class XMPPClient extends Activity {
         setListAdapter();
 
         // Dialog for getting the xmpp settings
+        cPreferences = new XMPPPreferences(this);
+
+        // Dialog for getting the xmpp settings
         mDialog = new SettingsDialog(this);
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);        
+        //MDJ SharedPreferences preferences = getPreferences(MODE_PRIVATE);        
         
         // Set a listener to show the settings dialog
         Button setup = (Button) this.findViewById(R.id.setup);
@@ -74,18 +82,78 @@ public class XMPPClient extends Activity {
                 Message msg = new Message(to, Message.Type.chat);
                 msg.setBody(text);
                 if ( connection != null ) {	
-                		connection.sendPacket(msg);
-                		messages.add(connection.getUser() + ":");
-                		messages.add(text);
-                		setListAdapter();
-                }
+            		if ( connection.isConnected()) {
+            			connection.sendPacket(msg);
+            			messages.add(connection.getUser() + ":");
+            			messages.add(text);
+            			setListAdapter();
+            		}
+                    else {
+                    	Log.i("XMPPClient", "Connection lost");
+                        Toast.makeText( getApplicationContext(), "Connection lost", Toast.LENGTH_SHORT).show();
+                    }                
+                }                	
                 else {
                 	Log.i("XMPPClient", "Connection error no connection");
+                    Toast.makeText( getApplicationContext(), "Connection error no connection", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
-
+    /**
+     * Called by Settings dialog when a try to connect with the XMPP server
+     *
+     * @param connection
+     */
+    public void connectConnection
+            (XMPPConnection
+                    connection) {
+    	if (connection != null) {
+	        try {
+	            connection.connect();            
+	            Log.i("XMPPClient", "[SettingsDialog] Connected to " + connection.getHost());
+	        } catch (XMPPException ex) {
+	            Log.e("XMPPClient", "[SettingsDialog] Failed to connect to " + connection.getHost());
+	            Log.e("XMPPClient", ex.toString());
+	            Toast.makeText(getApplicationContext(), ex.toString(), Toast.LENGTH_SHORT).show();
+	            setConnection(null);
+	        }
+    	}
+    	else {
+            Toast.makeText(getApplicationContext(), "connection == null", Toast.LENGTH_SHORT).show();    		
+    	}
+    }
+    /**
+     * Called by Settings dialog when a try to connect with the XMPP server
+     *
+     * @param connection
+     */
+    public void loginConnection
+            (	XMPPConnection connection,
+            		String username,
+            		String password) {
+    	if (connection != null) {
+            try {
+            	if ( connection.isConnected()) {
+		            connection.login(username, password);
+		            Log.i("XMPPClient", "Logged in as " + connection.getUser());
+		
+		            // Set the status to available
+		            Presence presence = new Presence(Presence.Type.available);
+		            connection.sendPacket(presence);
+		            setConnection(connection);
+                }
+            } catch (XMPPException ex) {
+                Log.e("XMPPClient", "[SettingsDialog] Failed to log in as " + username);
+                Log.e("XMPPClient", ex.toString());
+                setConnection(null);
+                Toast.makeText(getApplicationContext(), ex.toString(), Toast.LENGTH_SHORT).show();
+            }
+    	}
+    	else {
+            Toast.makeText(getApplicationContext(), "connection == null", Toast.LENGTH_SHORT).show();    		
+    	}
+    }
     /**
      * Called by Settings dialog when a connection is establised with the XMPP server
      *
